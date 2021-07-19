@@ -51,6 +51,7 @@ created
 
 其实到这里也能看出，computed 和 watch 在本质是没有区别的，都是通过 watcher 去实现的响应式
 非要说有区别，那也只是在使用方式上的区别，简单来说：
+computed是懒执行，且不可更改，但是 watcher可配置
 1、watch：适用于当数据变化时执行异步或者开销较大的操作时使用，即需要长时间等待的操作可以放在 watch 中
 2、computed：其中可以使用异步方法，但是没有任何意义。所以 computed 更适合做一些同步计算
 
@@ -62,11 +63,11 @@ computed 一般用于封装一些简单的同步逻辑，将经过处理的数�
 watch 一般用于当需要在数据变化时执行异步或开销较大的操作
 
 
-methods VS computed
+##### 常见的面试题：computed和 methods有什么区别？ methods VS computed
 
 通过示例会发现，如果在一次渲染中，有多个地方使用了同一个 methods 或 computed 属性，methods 会被执行多次，而 computed 的回调函数则只会被执行一次。
 
-通过阅读源码我们知道，在一次渲染中，多次访问 computedProperty，只会在第一次执行 computed 属性的回调函数，后续的其它访问，则直接使用第一次的执行结果（watcher.value），而这一切的实现原理则是通过对 watcher.dirty 属性的控制实现的。而 methods，每一次的访问则是简单的方法调用（this.xxMethods）。
+通过阅读源码我们知道，在一次渲染中，多次访问 computedProperty，只会在第一次执行 computed 属性的回调函数，后续的其它访问，则直接使用第一次的执行结果（watcher.value），而这一切的实现原理则是computed会缓存 缓存的原理是什么？ 通过对 watcher.dirty 属性的控制实现的。而 methods，每一次的访问则是简单的方法调用（this.xxMethods）。
 
 computed VS watch
 
@@ -75,6 +76,11 @@ computed VS watch
 methods VS watch
 
 methods 和 watch 之间其实没什么可比的，完全是两个东西，不过在使用上可以把 watch 中一些逻辑抽到 methods 中，提高代码的可读性。
+
+#### 3、响应式数据的优先级
+ props methods data computed watch
+ 
+
 
 
 
