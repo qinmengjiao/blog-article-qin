@@ -99,6 +99,21 @@ methods 和 watch 之间其实没什么可比的，完全是两个东西，不�
 #### 3、响应式数据的优先级
  props methods data computed watch
  
+### 三、异步更新
+
+#### 1、Vue的异步更新机制是如何实现的？
+
+Vue的异步更新机制的核心是利用了浏览器的异步任务队列来实现的，首选微任务队列，宏任务队列次之。
+ 
+当响应式数据更新后，会调用Dep.notify方法，通知dep中收集的watcher去执行update方法，watcher.update将watcher自己放到一个watcher队列中（全局的queue数组）。
+
+然后通过nextTick 方法将 一个刷新watcher队列的方法（flushScheduleQueue）放到全局的callbacks 数组中。
+
+如果此时浏览器的异步任务队列中没有一个叫flushCallbacks的函数，则执行timerFunc函数，将flushCallbacks函数 放到异步任务队列。如果异步任务队列中有已经存在flushCallbacks函数，则等其执行完成后再放入下一个flushCallbacks函数。
+
+flushCallback函数负责执行callbacks
+
+ 
 
 
 
