@@ -111,7 +111,15 @@ Vue的异步更新机制的核心是利用了浏览器的异步任务队列来�
 
 如果此时浏览器的异步任务队列中没有一个叫flushCallbacks的函数，则执行timerFunc函数，将flushCallbacks函数 放到异步任务队列。如果异步任务队列中有已经存在flushCallbacks函数，则等其执行完成后再放入下一个flushCallbacks函数。
 
-flushCallback函数负责执行callbacks
+flushCallback函数负责执行callbacks数组中的所有的flushScheduleQueue函数。
+flushScheduleQueue函数负责刷新watcher队列，即执行queue 数组中的每一个watcher 的run方法，从而进入更新阶段，比如执行组件更新函数或者执行用户watch的回调函数。
+
+#### 2、Vue的nextTick API 是如何实现的？
+
+Vue.nextTick或者$.nextTick的原理其实很简单，就是做了两个事情
+
+1）将传递的回调函数用 try catch包裹后放到全局的callbacks数组
+2）执行timerFunc 函数，在浏览器的异步任务队列中放入一个刷新callbacks数组的函数
 
  
 
